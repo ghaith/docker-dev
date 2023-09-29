@@ -1,0 +1,7 @@
+packages = [
+	"helix",
+	"nvim",
+	"starship",
+	"tmux",
+	"zsh"
+]
