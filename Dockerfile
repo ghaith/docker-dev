@@ -24,10 +24,13 @@ RUN rustup update
 #Install rust source
 RUN rustup component add rust-src rust-analyzer
 
+ARG USER=dev
+ARG UID=1000
+ARG GID=1000
 # Switch to a new local user
-RUN useradd -ms /bin/zsh dev && mkdir -p /home/dev/
-USER dev
-WORKDIR /home/dev
+RUN useradd -ms /bin/zsh ${USER} --uid ${UID} --gid ${GID} && mkdir -p /home/${USER}/
+USER ${USER}
+WORKDIR /home/${USER}
 RUN mkdir -p ~/.local/bin
 
 # Install Helix
@@ -52,16 +55,16 @@ RUN cargo binstall -y cargo-watch cargo-insta eza bat ripgrep
 # Install the dotfiles
 ADD https://api.github.com/repos/ghaith/dotfiles/git/refs/heads/master version.json
 RUN git clone https://github.com/ghaith/dotfiles.git
-WORKDIR /home/dev/dotfiles
+WORKDIR /home/${USER}/dotfiles
 COPY local.toml .dotter/local.toml
 
 # Dowload and run dotter
 RUN cargo binstall -y dotter --no-symlinks && dotter
 
-ENV PATH="${PATH}:/home/dev/.local/bin:/home/dev/.local/usr/bin"
+ENV PATH="${PATH}:/home/${USER}/.local/bin:/home/${USER}/.local/usr/bin"
 
-RUN mkdir -p /home/dev/work
-WORKDIR /home/dev/work
+RUN mkdir -p /home/${USER}/work
+WORKDIR /home/${USER}/work
 
 #Switch to zsh to install the zsh dependency
 #Run a headless nvim with the packer sync command
