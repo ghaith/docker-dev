@@ -9,21 +9,22 @@ all: build run
 
 build: Dockerfile local.toml
 	echo $(USER_ID)
-	docker build -t $(IMAGE_NAME) \
+	podman build -t $(IMAGE_NAME) \
 		--build-arg USER=$(USER)  \
 		--build-arg UID=$(UID)  \
 		--build-arg GID=$(GID)  \
 		.  
 
 run: stop
-	docker run \
+	podman run \
+		--userns keep-id \
 		--rm -d -it \
 		--name $(IMAGE_NAME) \
 		-v $(TARGET):/home/$(USER)/work \
 		$(IMAGE_NAME)
 
 attach:
-	docker exec -it $(IMAGE_NAME) zsh
+	podman exec -it $(IMAGE_NAME) zsh
 
 stop: 
-	docker stop $(IMAGE_NAME) || true 
+	podman stop $(IMAGE_NAME) || true 
