@@ -7,7 +7,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get upgrade -y
 
 # Install tmux and other deps
-RUN apt-get -y install tmux zsh git golang
+RUN apt-get -y install tmux zsh git golang fzf
 
 # Install Starship
 RUN curl -LO https://starship.rs/install.sh && sh install.sh --yes
@@ -68,7 +68,7 @@ WORKDIR /home/${USER}/work
 
 #Switch to zsh to install the zsh dependency
 #Run a headless nvim with the packer sync command
-RUN nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
+RUN nvim --headless  +q
 
 RUN /usr/bin/zsh -c "echo 'Done initializing zsh'"
 
