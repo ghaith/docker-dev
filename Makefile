@@ -18,6 +18,7 @@ build: Dockerfile local.toml
 
 run: stop
 	podman run \
+		--replace \
 		--userns keep-id \
 		--rm -d -it \
 		--name $(IMAGE_NAME) \
